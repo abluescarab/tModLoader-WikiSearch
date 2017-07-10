@@ -8,4 +8,4 @@ Press Q to search the wiki while hovering over any item, NPC, or tile.
 * Chests open the chest page instead of the individual page
 
 ## Credits
-* DrEinsteinium for the original tWiki mod
+* [DrEinsteinium](https://forums.terraria.org/index.php?members/dreinsteinium.48502/) for the original tWiki mod
