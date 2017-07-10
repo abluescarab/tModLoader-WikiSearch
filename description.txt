@@ -1,0 +1,12 @@
+﻿Based on DrEinsteinium's tWiki mod, WikiSearch is a tModLoader mod that allows you to search the Terraria Wiki for whatever is under the mouse cursor.
+
+[Known Issues]
+* Some naturally-placed tiles cannot be searched
+* Chests open the chest page instead of the individual page
+
+[Credits]
+* DrEinsteinium for the original tWiki mod
+
+[Changelog]
+v1.0.0  2017-07-10
+Initial release.
