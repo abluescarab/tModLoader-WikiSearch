@@ -6,9 +6,12 @@ using Terraria.ModLoader;
 
 namespace WikiSearch {
     public static class SearchUtils {
-        public static HashSet<Item> createTileItems = new HashSet<Item>();
-        public static HashSet<Item> createWallItems = new HashSet<Item>();
+        public static HashSet<Item> defaultTileItems = new HashSet<Item>();
+        public static HashSet<Item> defaultWallItems = new HashSet<Item>();
 
+        public static Dictionary<string, HashSet<Item>> modTileItems = new Dictionary<string, HashSet<Item>>();
+        public static Dictionary<string, HashSet<Item>> modWallItems = new Dictionary<string, HashSet<Item>>();
+        
         public const string TERRARIA_WIKI = "http://terraria.gamepedia.com/index.php?search=%s";
 
         /// <summary>
@@ -101,10 +104,24 @@ namespace WikiSearch {
 
                 // if the tile is inactive, it's either air or a wall
                 if(active) {
-                    item = createTileItems.FirstOrDefault(i => i.createTile == tile.type);
+                    item = defaultTileItems.FirstOrDefault(i => i.createTile == tile.type);
+
+                    if(item == null) {
+                        foreach(HashSet<Item> set in modTileItems.Values) {
+                            item = set.FirstOrDefault(m => m.createTile == tile.type);
+                            if(item != null) break;
+                        }
+                    }
                 }
                 else if(tile.wall > 0) {
-                    item = createWallItems.FirstOrDefault(i => i.createWall == tile.wall);
+                    item = defaultWallItems.FirstOrDefault(i => i.createWall == tile.type);
+
+                    if(item == null) {
+                        foreach(HashSet<Item> set in modWallItems.Values) {
+                            item = set.FirstOrDefault(m => m.createWall == tile.type);
+                            if(item != null) break;
+                        }
+                    }
                 }
 
                 if(item != null) {

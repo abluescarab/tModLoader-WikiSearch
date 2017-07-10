@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework.Input;
 using Terraria.ModLoader;
 
 namespace WikiSearch {
     public class WikiSearch : Mod {
         private HotKey wikiSearchKey = new HotKey("Search Wiki", Keys.Q);
-
+        
         public static Dictionary<Mod, string> registeredMods = new Dictionary<Mod, string>();
 
         public override void Load() {
             RegisterHotKey(wikiSearchKey.Name, wikiSearchKey.DefaultKey.ToString());
         }
-
+        
         public override void HotKeyPressed(string name) {
             if(HotKey.JustPressed(this, name)) {
                 if(name.Equals(wikiSearchKey.Name)) {
@@ -22,11 +23,36 @@ namespace WikiSearch {
         }
 
         public override void PostSetupContent() {
-            RegisterMod(ModLoader.GetMod("ThoriumMod"), "http://thoriummod.gamepedia.com/index.php?search=%s");
-            RegisterMod(ModLoader.GetMod("CalamityMod"), "http://calamitymod.gamepedia.com/index.php?search=%s");
-            RegisterMod(ModLoader.GetMod("SpiritMod"), "http://spiritmod.gamepedia.com/index.php?search=%s");
-            RegisterMod(ModLoader.GetMod("Fargowiltas"), "http://fargosmod.gamepedia.com/index.php?search=%s");
-            RegisterMod(ModLoader.GetMod("Tremor"), "http://tremormod.gamepedia.com/index.php?search=%s");
+            Mod thorium = ModLoader.GetMod("ThoriumMod");
+            Mod calamity = ModLoader.GetMod("CalamityMod");
+            Mod spirit = ModLoader.GetMod("SpiritMod");
+            Mod fargo = ModLoader.GetMod("Fargowiltas");
+            Mod tremor = ModLoader.GetMod("Tremor");
+
+            if(thorium != null)
+                RegisterMod(thorium, "http://thoriummod.gamepedia.com/index.php?search=%s");
+            else
+                UnregisterMod("ThoriumMod");
+
+            if(calamity != null)
+                RegisterMod(calamity, "http://calamitymod.gamepedia.com/index.php?search=%s");
+            else
+                UnregisterMod("CalamityMod");
+
+            if(spirit != null)
+                RegisterMod(spirit, "http://spiritmod.gamepedia.com/index.php?search=%s");
+            else
+                UnregisterMod("SpiritMod");
+
+            if(fargo != null)
+                RegisterMod(fargo, "http://fargosmod.gamepedia.com/index.php?search=%s");
+            else
+                UnregisterMod("Fargowiltas");
+
+            if(tremor != null)
+                RegisterMod(tremor, "http://tremormod.gamepedia.com/index.php?search=%s");
+            else
+                UnregisterMod("Tremor");
         }
 
         public override object Call(params object[] args) {
@@ -44,6 +70,20 @@ namespace WikiSearch {
             if(mod != null && !string.IsNullOrWhiteSpace(searchUrl)) {
                 registeredMods.Add(mod, searchUrl);
                 ErrorLogger.Log("[" + DateTime.Now + "] Successfully registered " + mod.DisplayName + " with WikiSearch.");
+            }
+        }
+
+        private void UnregisterMod(string modName) {
+            if(!string.IsNullOrWhiteSpace(modName)) {
+                Mod mod = registeredMods.Keys.FirstOrDefault(m => m.Name.Equals(modName));
+
+                if(mod != null) {
+                    registeredMods.Remove(mod);
+
+                    SearchUtils.modTileItems.Remove(mod.Name);
+                    SearchUtils.modWallItems.Remove(mod.Name);
+                    ErrorLogger.Log("[" + DateTime.Now + "] Successfully unregistered " + mod.DisplayName + " with WikiSearch.");
+                }
             }
         }
     }
