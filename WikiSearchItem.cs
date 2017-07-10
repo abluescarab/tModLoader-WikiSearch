@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terraria;
+﻿using Terraria;
 using Terraria.ModLoader;
 
 namespace WikiSearch {
@@ -15,11 +10,11 @@ namespace WikiSearch {
         public override void SetDefaults(Item item) {
             base.SetDefaults(item);
             if(item.createTile > -1) {
-                WikiSearch.createTileItems.Add(item);
+                SearchUtils.createTileItems.Add(item);
             }
 
             if(item.createWall > 0) {
-                WikiSearch.createWallItems.Add(item);
+                SearchUtils.createWallItems.Add(item);
             }
         }
     }

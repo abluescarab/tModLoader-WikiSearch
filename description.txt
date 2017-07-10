@@ -1,6 +1,9 @@
 ﻿Based on DrEinsteinium's tWiki mod, WikiSearch is a tModLoader mod that allows you to search the Terraria Wiki for whatever is under the mouse cursor.
 
-Press Q to search the wiki while hovering over any item, NPC, or tile.
+* Press Q to search the wiki while hovering over any item, NPC, or tile.
+* Now has mod support! Included mods: Thorium, Calamity, Spirit, Fargo's, and Tremor.
+
+Visit the homepage for instructions on registering your own mod.
 
 [Known Issues]
 * Some naturally-placed tiles cannot be searched
@@ -8,7 +11,11 @@ Press Q to search the wiki while hovering over any item, NPC, or tile.
 
 [Credits]
 * DrEinsteinium for the original tWiki mod
+* DarkLight for suggesting mod support and linking some mod wikis
 
 [Changelog]
+v2.0.0  2017-07-10
+* Added support for mod items and added some popular mods
+
 v1.0.0  2017-07-10
 Initial release.
