@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -11,7 +12,7 @@ namespace WikiSearch {
 
         public static Dictionary<string, HashSet<Item>> modTileItems = new Dictionary<string, HashSet<Item>>();
         public static Dictionary<string, HashSet<Item>> modWallItems = new Dictionary<string, HashSet<Item>>();
-        
+
         public const string TERRARIA_WIKI = "http://terraria.gamepedia.com/index.php?search=%s";
 
         /// <summary>
@@ -93,8 +94,15 @@ namespace WikiSearch {
         /// </summary>
         /// <returns>whether a tile is under the mouse cursor</returns>
         private static bool TileHover() {
-            // get the tile under the cursor
-            Tile tile = Main.tile[Player.tileTargetX, Player.tileTargetY];
+            Vector2 hoverTile = GetHoveringTile();
+            Tile tile = null;
+
+            if((hoverTile.X > 0) && (hoverTile.Y > 0) && (hoverTile.X < Main.tile.GetLength(0)) &&
+               (hoverTile.Y < Main.tile.GetLength(1))) {
+                // get the tile under the cursor
+                tile = Main.tile[(int)hoverTile.X, (int)hoverTile.Y];
+            }
+
             Item item = null;
             bool active = false;
             string term = string.Empty;
@@ -122,6 +130,24 @@ namespace WikiSearch {
                             if(item != null) break;
                         }
                     }
+                }
+                else if(tile.liquid > 0) {
+                    int liquid = tile.liquidType();
+                    string search = "";
+
+                    switch(liquid) {
+                        case Tile.Liquid_Water:
+                            search = "Water";
+                            break;
+                        case Tile.Liquid_Lava:
+                            search = "Lava";
+                            break;
+                        case Tile.Liquid_Honey:
+                            search = "Honey";
+                            break;
+                    }
+
+                    DoSearch(TERRARIA_WIKI, search);
                 }
 
                 if(item != null) {
@@ -168,6 +194,18 @@ namespace WikiSearch {
             }
 
             return null;
+        }
+
+        // following code modified from game source
+        private static Vector2 GetHoveringTile() {
+            int tileTargetX = (int)((Main.mouseX + Main.screenPosition.X) / 16f);
+            int tileTargetY = (int)((Main.mouseY + Main.screenPosition.Y) / 16f);
+
+            if(Main.LocalPlayer.gravDir == -1f) {
+                tileTargetY = (int)((Main.screenPosition.Y + Main.screenHeight - Main.mouseY) / 16f);
+            }
+
+            return new Vector2(tileTargetX, tileTargetY);
         }
     }
 }
