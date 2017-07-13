@@ -1,25 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Xna.Framework.Input;
 using Terraria.ModLoader;
 
 namespace WikiSearch {
     public class WikiSearch : Mod {
-        private HotKey wikiSearchKey = new HotKey("Search Wiki", Keys.Q);
-        
+        private const string WIKI_SEARCH_NAME = "Search Wiki";
+        private const string WIKI_SEARCH_KEY = "Q";
+
+        private static ModHotKey wikiSearchKey;
+
         public static Dictionary<Mod, string> registeredMods = new Dictionary<Mod, string>();
 
         public override void Load() {
-            RegisterHotKey(wikiSearchKey.Name, wikiSearchKey.DefaultKey.ToString());
-        }
-        
-        public override void HotKeyPressed(string name) {
-            if(HotKey.JustPressed(this, name)) {
-                if(name.Equals(wikiSearchKey.Name)) {
-                    SearchUtils.SearchWiki();
-                }
-            }
+            wikiSearchKey = RegisterHotKey(WIKI_SEARCH_NAME, WIKI_SEARCH_KEY);
         }
 
         public override void PostSetupContent() {
@@ -53,6 +47,17 @@ namespace WikiSearch {
                 RegisterMod(tremor, "http://tremormod.gamepedia.com/index.php?search=%s");
             else
                 UnregisterMod("Tremor");
+        }
+
+        public override void PostUpdateInput() {
+            try {
+                if(wikiSearchKey != null && wikiSearchKey.JustPressed) {
+                    SearchUtils.SearchWiki();
+                }
+            }
+            catch(KeyNotFoundException) {
+                // ignore
+            }
         }
 
         public override object Call(params object[] args) {
