@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
+using Steamworks;
 
 namespace WikiSearch {
     public static class SearchUtils {
@@ -179,8 +180,13 @@ namespace WikiSearch {
             Main.NewText("Cannot search. \"" + name + "\" is a modded " + type + " from " + mod + ".");
         }
 
-        private static void DoSearch(string url, string term) {
-            Process.Start(url.Replace("%s", term));
+        private static void DoSearch(string url, string term)
+        {
+            // check if steam is running and if the game is using the steam overlay
+            if (SteamAPI.IsSteamRunning() && SteamUtils.IsOverlayEnabled())
+                SteamFriends.ActivateGameOverlayToWebPage(url.Replace("%s", term));
+            else
+                Process.Start(url.Replace("%s", term));
         }
 
         // Thanks to DrEinsteinium for the base method
