@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 using Steamworks;
+using ModConfiguration;
 
 namespace WikiSearch {
     public static class SearchUtils {
@@ -182,11 +183,15 @@ namespace WikiSearch {
 
         private static void DoSearch(string url, string term)
         {
-            // check if steam is running and if the game is using the steam overlay
-            if (SteamAPI.IsSteamRunning() && SteamUtils.IsOverlayEnabled())
+            bool useOverlay = (bool)ModConfig.GetOption(WikiSearch.STEAM_OVERLAY);
+
+            // check if steam overlay option is true, steam is running, and if the game is using the steam overlay
+            if(useOverlay && SteamAPI.IsSteamRunning() && SteamUtils.IsOverlayEnabled()) {
                 SteamFriends.ActivateGameOverlayToWebPage(url.Replace("%s", term));
-            else
+            }
+            else {
                 Process.Start(url.Replace("%s", term));
+            }
         }
 
         // Thanks to DrEinsteinium for the base method

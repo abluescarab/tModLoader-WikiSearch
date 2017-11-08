@@ -1,18 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ModConfiguration;
 using Terraria.ModLoader;
 
 namespace WikiSearch {
     public class WikiSearch : Mod {
         private const string WIKI_SEARCH_NAME = "Search Wiki";
         private const string WIKI_SEARCH_KEY = "Q";
+        public const string STEAM_OVERLAY = "UseSteamOverlay";
 
         private static ModHotKey wikiSearchKey;
 
         public static Dictionary<Mod, string> registeredMods = new Dictionary<Mod, string>();
 
         public override void Load() {
+            Properties = new ModProperties() {
+                Autoload = true,
+                AutoloadBackgrounds = true,
+                AutoloadSounds = true
+            };
+
+            ModConfig.ModName = "WikiSearch";
+            ModConfig.AddOption(STEAM_OVERLAY, true);
+            ModConfig.Load();
+
             wikiSearchKey = RegisterHotKey(WIKI_SEARCH_NAME, WIKI_SEARCH_KEY);
         }
 
