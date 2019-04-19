@@ -15,7 +15,7 @@ namespace WikiSearch {
         public static Dictionary<Mod, string> registeredMods = new Dictionary<Mod, string>();
 
         public override void Load() {
-            Properties = new ModProperties() {
+            Properties = new ModProperties {
                 Autoload = true,
                 AutoloadBackgrounds = true,
                 AutoloadSounds = true

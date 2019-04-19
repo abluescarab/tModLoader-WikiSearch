@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using Terraria;
 using Terraria.IO;
@@ -120,11 +119,11 @@ namespace ModConfiguration {
             preferences.Save();
         }
     }
-    
+
     public class ModOption {
         public string Name { get; set; }
         public object Value { get; set; }
-        
+
         public ModOption(string name, object value) {
             Name = name;
             Value = value;
