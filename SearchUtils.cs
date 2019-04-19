@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Microsoft.Xna.Framework;
 using ModConfiguration;
 using Steamworks;
@@ -41,6 +42,7 @@ namespace WikiSearch {
                     // check if the hovered item is part of a mod
                     if(Main.HoverItem.modItem != null) {
                         Mod mod = Main.HoverItem.modItem.mod;
+                        name = Regex.Replace(name, @"\[.+\]", "").Trim();
 
                         // check if the mod is registered
                         if(WikiSearch.registeredMods.ContainsKey(mod)) {
