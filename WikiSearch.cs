@@ -12,7 +12,7 @@ namespace WikiSearch {
 
         private static ModHotKey wikiSearchKey;
 
-        public static Dictionary<Mod, string> registeredMods = new Dictionary<Mod, string>();
+        public static Dictionary<Mod, string> registeredMods;
 
         public override void Load() {
             Properties = new ModProperties {
@@ -21,11 +21,18 @@ namespace WikiSearch {
                 AutoloadSounds = true
             };
 
+            registeredMods = new Dictionary<Mod, string>();
+
             ModConfig.ModName = "WikiSearch";
             ModConfig.AddOption(STEAM_OVERLAY, true);
             ModConfig.Load();
 
             wikiSearchKey = RegisterHotKey(WIKI_SEARCH_NAME, WIKI_SEARCH_KEY);
+        }
+
+        public override void Unload() {
+            wikiSearchKey = null;
+            registeredMods = null;
         }
 
         public override void PostSetupContent() {
