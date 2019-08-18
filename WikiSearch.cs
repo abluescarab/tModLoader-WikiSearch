@@ -93,7 +93,7 @@ namespace WikiSearch {
         private void RegisterMod(Mod mod, string searchUrl) {
             if(mod != null && !string.IsNullOrWhiteSpace(searchUrl)) {
                 registeredMods.Add(mod, searchUrl);
-                ErrorLogger.Log("[" + DateTime.Now + "] Successfully registered " + mod.DisplayName + " with WikiSearch.");
+                Logger.InfoFormat("[{0}] Successfully registered {1} with WikiSearch.", DateTime.Now, mod.DisplayName);
             }
         }
 
@@ -106,7 +106,8 @@ namespace WikiSearch {
 
                     SearchUtils.modTileItems.Remove(mod.Name);
                     SearchUtils.modWallItems.Remove(mod.Name);
-                    ErrorLogger.Log("[" + DateTime.Now + "] Successfully unregistered " + mod.DisplayName + " with WikiSearch.");
+
+                    Logger.InfoFormat("[{0}] Successfully unregistered {1} with WikiSearch.", DateTime.Now, mod.DisplayName);
                 }
             }
         }
