@@ -8,27 +8,27 @@ namespace WikiSearch {
             base.SetDefaults(item);
             if(item.createTile > -1) {
                 if(item.modItem != null) {
-                    if(!SearchUtils.modTileItems.ContainsKey(item.modItem.mod.Name)) {
-                        SearchUtils.modTileItems[item.modItem.mod.Name] = new HashSet<Item>();
+                    if(!SearchUtils.ModTileItems.ContainsKey(item.modItem.mod.Name)) {
+                        SearchUtils.ModTileItems[item.modItem.mod.Name] = new HashSet<Item>();
                     }
 
-                    SearchUtils.modTileItems[item.modItem.mod.Name].Add(item);
+                    SearchUtils.ModTileItems[item.modItem.mod.Name].Add(item);
                 }
                 else {
-                    SearchUtils.defaultTileItems.Add(item);
+                    SearchUtils.DefaultTileItems.Add(item);
                 }
             }
 
             if(item.createWall > 0) {
                 if(item.modItem != null) {
-                    if(!SearchUtils.modWallItems.ContainsKey(item.modItem.mod.Name)) {
-                        SearchUtils.modWallItems[item.modItem.mod.Name] = new HashSet<Item>();
+                    if(!SearchUtils.ModWallItems.ContainsKey(item.modItem.mod.Name)) {
+                        SearchUtils.ModWallItems[item.modItem.mod.Name] = new HashSet<Item>();
                     }
 
-                    SearchUtils.modWallItems[item.modItem.mod.Name].Add(item);
+                    SearchUtils.ModWallItems[item.modItem.mod.Name].Add(item);
                 }
                 else {
-                    SearchUtils.defaultWallItems.Add(item);
+                    SearchUtils.DefaultWallItems.Add(item);
                 }
             }
         }

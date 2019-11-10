@@ -3,20 +3,19 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.Xna.Framework;
-using ModConfiguration;
 using Steamworks;
 using Terraria;
 using Terraria.ModLoader;
 
 namespace WikiSearch {
     public static class SearchUtils {
-        public static HashSet<Item> defaultTileItems = new HashSet<Item>();
-        public static HashSet<Item> defaultWallItems = new HashSet<Item>();
+        public static HashSet<Item> DefaultTileItems = new HashSet<Item>();
+        public static HashSet<Item> DefaultWallItems = new HashSet<Item>();
 
-        public static Dictionary<string, HashSet<Item>> modTileItems = new Dictionary<string, HashSet<Item>>();
-        public static Dictionary<string, HashSet<Item>> modWallItems = new Dictionary<string, HashSet<Item>>();
+        public static Dictionary<string, HashSet<Item>> ModTileItems = new Dictionary<string, HashSet<Item>>();
+        public static Dictionary<string, HashSet<Item>> ModWallItems = new Dictionary<string, HashSet<Item>>();
 
-        public const string TERRARIA_WIKI = "http://terraria.gamepedia.com/index.php?search=%s";
+        public const string TerrariaWiki = "http://terraria.gamepedia.com/index.php?search=%s";
 
         /// <summary>
         /// Begin searching for the item under the mouse cursor.
@@ -45,15 +44,15 @@ namespace WikiSearch {
                         name = Regex.Replace(name, @"\[.+\]", "").Trim();
 
                         // check if the mod is registered
-                        if(WikiSearch.registeredMods.ContainsKey(mod)) {
-                            DoSearch(WikiSearch.registeredMods[mod], name);
+                        if(WikiSearch.RegisteredMods.ContainsKey(mod)) {
+                            DoSearch(WikiSearch.RegisteredMods[mod], name);
                         }
                         else {
                             ShowModMessage("item", name, Main.HoverItem.modItem.mod.DisplayName);
                         }
                     }
                     else {
-                        DoSearch(TERRARIA_WIKI, name);
+                        DoSearch(TerrariaWiki, name);
                     }
 
                     return true;
@@ -76,15 +75,15 @@ namespace WikiSearch {
                 if(npc.modNPC != null) {
                     Mod mod = npc.modNPC.mod;
 
-                    if(WikiSearch.registeredMods.ContainsKey(mod)) {
-                        DoSearch(WikiSearch.registeredMods[mod], npc.TypeName);
+                    if(WikiSearch.RegisteredMods.ContainsKey(mod)) {
+                        DoSearch(WikiSearch.RegisteredMods[mod], npc.TypeName);
                     }
                     else {
                         ShowModMessage("NPC", npc.TypeName, npc.modNPC.mod.DisplayName);
                     }
                 }
                 else {
-                    DoSearch(TERRARIA_WIKI, npc.TypeName);
+                    DoSearch(TerrariaWiki, npc.TypeName);
                 }
 
                 return true;
@@ -116,20 +115,20 @@ namespace WikiSearch {
 
                 // if the tile is inactive, it's either air or a wall
                 if(active) {
-                    item = defaultTileItems.FirstOrDefault(i => i.createTile == tile.type);
+                    item = DefaultTileItems.FirstOrDefault(i => i.createTile == tile.type);
 
                     if(item == null) {
-                        foreach(HashSet<Item> set in modTileItems.Values) {
+                        foreach(HashSet<Item> set in ModTileItems.Values) {
                             item = set.FirstOrDefault(m => m.createTile == tile.type);
                             if(item != null) break;
                         }
                     }
                 }
                 else if(tile.wall > 0) {
-                    item = defaultWallItems.FirstOrDefault(i => i.createWall == tile.type);
+                    item = DefaultWallItems.FirstOrDefault(i => i.createWall == tile.type);
 
                     if(item == null) {
-                        foreach(HashSet<Item> set in modWallItems.Values) {
+                        foreach(HashSet<Item> set in ModWallItems.Values) {
                             item = set.FirstOrDefault(m => m.createWall == tile.type);
                             if(item != null) break;
                         }
@@ -151,22 +150,22 @@ namespace WikiSearch {
                             break;
                     }
 
-                    DoSearch(TERRARIA_WIKI, search);
+                    DoSearch(TerrariaWiki, search);
                 }
 
                 if(item != null) {
                     if(item.modItem != null) {
                         Mod mod = item.modItem.mod;
 
-                        if(WikiSearch.registeredMods.ContainsKey(mod)) {
-                            DoSearch(WikiSearch.registeredMods[mod], item.Name);
+                        if(WikiSearch.RegisteredMods.ContainsKey(mod)) {
+                            DoSearch(WikiSearch.RegisteredMods[mod], item.Name);
                         }
                         else {
                             ShowModMessage("item", item.Name, item.modItem.mod.DisplayName);
                         }
                     }
                     else {
-                        DoSearch(TERRARIA_WIKI, item.Name);
+                        DoSearch(TerrariaWiki, item.Name);
                     }
                 }
                 else if(active || (!active && tile.wall > 0)) {
@@ -184,10 +183,8 @@ namespace WikiSearch {
         }
 
         private static void DoSearch(string url, string term) {
-            bool useOverlay = (bool)ModConfig.GetOption(WikiSearch.STEAM_OVERLAY);
-
             // check if steam overlay option is true, steam is running, and if the game is using the steam overlay
-            if(useOverlay && SteamAPI.IsSteamRunning() && SteamUtils.IsOverlayEnabled()) {
+            if(WikiSearch.UseSteamOverlay && SteamAPI.IsSteamRunning() && SteamUtils.IsOverlayEnabled()) {
                 SteamFriends.ActivateGameOverlayToWebPage(url.Replace("%s", term));
             }
             else {
