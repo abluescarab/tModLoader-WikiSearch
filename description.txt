@@ -14,6 +14,9 @@ Visit the homepage for instructions on registering your own mod.
 * DarkLight for suggesting mod support and linking some mod wikis
 
 [Changelog]
+v2.4.0  2019-11-10
+* Implemented tModLoader ModConfig
+
 v2.3.2  2019-08-17
 * Build for tModLoader v0.11.4
 
