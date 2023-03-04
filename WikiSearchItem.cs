@@ -7,12 +7,12 @@ namespace WikiSearch {
         public override void SetDefaults(Item item) {
             base.SetDefaults(item);
             if(item.createTile > -1) {
-                if(item.modItem != null) {
-                    if(!SearchUtils.ModTileItems.ContainsKey(item.modItem.mod.Name)) {
-                        SearchUtils.ModTileItems[item.modItem.mod.Name] = new HashSet<Item>();
+                if(item.ModItem != null) {
+                    if(!SearchUtils.ModTileItems.ContainsKey(item.ModItem.Mod.Name)) {
+                        SearchUtils.ModTileItems[item.ModItem.Mod.Name] = new HashSet<Item>();
                     }
 
-                    SearchUtils.ModTileItems[item.modItem.mod.Name].Add(item);
+                    SearchUtils.ModTileItems[item.ModItem.Mod.Name].Add(item);
                 }
                 else {
                     SearchUtils.DefaultTileItems.Add(item);
@@ -20,12 +20,12 @@ namespace WikiSearch {
             }
 
             if(item.createWall > 0) {
-                if(item.modItem != null) {
-                    if(!SearchUtils.ModWallItems.ContainsKey(item.modItem.mod.Name)) {
-                        SearchUtils.ModWallItems[item.modItem.mod.Name] = new HashSet<Item>();
+                if(item.ModItem != null) {
+                    if(!SearchUtils.ModWallItems.ContainsKey(item.ModItem.Mod.Name)) {
+                        SearchUtils.ModWallItems[item.ModItem.Mod.Name] = new HashSet<Item>();
                     }
 
-                    SearchUtils.ModWallItems[item.modItem.mod.Name].Add(item);
+                    SearchUtils.ModWallItems[item.ModItem.Mod.Name].Add(item);
                 }
                 else {
                     SearchUtils.DefaultWallItems.Add(item);

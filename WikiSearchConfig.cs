@@ -10,7 +10,7 @@ namespace WikiSearch {
         public bool UseSteamOverlay;
 
         public override void OnChanged() {
-            WikiSearch.UseSteamOverlay = UseSteamOverlay;
+            WikiSearchSystem.UseSteamOverlay = UseSteamOverlay;
         }
     }
 }

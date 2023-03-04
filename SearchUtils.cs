@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Xna.Framework;
+using Steamworks;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Microsoft.Xna.Framework;
-using Steamworks;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace WikiSearch {
@@ -39,16 +40,16 @@ namespace WikiSearch {
                     string name = Main.HoverItem.Name;
 
                     // check if the hovered item is part of a mod
-                    if(Main.HoverItem.modItem != null) {
-                        Mod mod = Main.HoverItem.modItem.mod;
+                    if(Main.HoverItem.ModItem != null) {
+                        Mod mod = Main.HoverItem.ModItem.Mod;
                         name = Regex.Replace(name, @"\[.+\]", "").Trim();
 
                         // check if the mod is registered
-                        if(WikiSearch.RegisteredMods.ContainsKey(mod)) {
-                            DoSearch(WikiSearch.RegisteredMods[mod], name);
+                        if(WikiSearchSystem.RegisteredMods.ContainsKey(mod)) {
+                            DoSearch(WikiSearchSystem.RegisteredMods[mod], name);
                         }
                         else {
-                            ShowModMessage("item", name, Main.HoverItem.modItem.mod.DisplayName);
+                            ShowModMessage("item", name, Main.HoverItem.ModItem.Mod.DisplayName);
                         }
                     }
                     else {
@@ -72,14 +73,14 @@ namespace WikiSearch {
 
             if(npc != null) {
                 // check if the npc is part of a mod
-                if(npc.modNPC != null) {
-                    Mod mod = npc.modNPC.mod;
+                if(npc.ModNPC != null) {
+                    Mod mod = npc.ModNPC.Mod;
 
-                    if(WikiSearch.RegisteredMods.ContainsKey(mod)) {
-                        DoSearch(WikiSearch.RegisteredMods[mod], npc.TypeName);
+                    if(WikiSearchSystem.RegisteredMods.ContainsKey(mod)) {
+                        DoSearch(WikiSearchSystem.RegisteredMods[mod], npc.TypeName);
                     }
                     else {
-                        ShowModMessage("NPC", npc.TypeName, npc.modNPC.mod.DisplayName);
+                        ShowModMessage("NPC", npc.TypeName, npc.ModNPC.Mod.DisplayName);
                     }
                 }
                 else {
@@ -98,84 +99,83 @@ namespace WikiSearch {
         /// <returns>whether a tile is under the mouse cursor</returns>
         private static bool TileHover() {
             Vector2 hoverTile = GetHoveringTile();
-            Tile tile = null;
 
-            if((hoverTile.X > 0) && (hoverTile.Y > 0) && (hoverTile.X < Main.tile.GetLength(0)) &&
-               (hoverTile.Y < Main.tile.GetLength(1))) {
-                // get the tile under the cursor
-                tile = Main.tile[(int)hoverTile.X, (int)hoverTile.Y];
+            if((hoverTile.X <= 0) ||
+               (hoverTile.Y <= 0) ||
+               (hoverTile.X > Main.tile.Width) ||
+               (hoverTile.Y > Main.tile.Height)) {
+                return false;
+                //tile = Main.tile[(int)hoverTile.X, (int)hoverTile.Y];
             }
 
+            // get the tile under the cursor
+            Tile tile = Main.tile[(int)hoverTile.X, (int)hoverTile.Y];
             Item item = null;
             bool active = false;
             string term = string.Empty;
 
-            if(tile != null) {
-                active = tile.active();
+            active = tile.HasTile;
 
-                // if the tile is inactive, it's either air or a wall
-                if(active) {
-                    item = DefaultTileItems.FirstOrDefault(i => i.createTile == tile.type);
+            // if the tile is inactive, it's either air or a wall
+            if(active) {
+                item = DefaultTileItems.FirstOrDefault(i => i.createTile == tile.TileType);
 
-                    if(item == null) {
-                        foreach(HashSet<Item> set in ModTileItems.Values) {
-                            item = set.FirstOrDefault(m => m.createTile == tile.type);
-                            if(item != null) break;
-                        }
+                if(item == null) {
+                    foreach(HashSet<Item> set in ModTileItems.Values) {
+                        item = set.FirstOrDefault(m => m.createTile == tile.TileType);
+                        if(item != null) break;
                     }
                 }
-                else if(tile.wall > 0) {
-                    item = DefaultWallItems.FirstOrDefault(i => i.createWall == tile.type);
+            }
+            else if(tile.WallType > 0) {
+                item = DefaultWallItems.FirstOrDefault(i => i.createWall == tile.TileType);
 
-                    if(item == null) {
-                        foreach(HashSet<Item> set in ModWallItems.Values) {
-                            item = set.FirstOrDefault(m => m.createWall == tile.type);
-                            if(item != null) break;
-                        }
+                if(item == null) {
+                    foreach(HashSet<Item> set in ModWallItems.Values) {
+                        item = set.FirstOrDefault(m => m.createWall == tile.TileType);
+                        if(item != null) break;
                     }
                 }
-                else if(tile.liquid > 0) {
-                    int liquid = tile.liquidType();
-                    string search = "";
+            }
+            else if(tile.LiquidAmount > 0) {
+                int liquid = tile.LiquidType;
+                string search = "";
 
-                    switch(liquid) {
-                        case Tile.Liquid_Water:
-                            search = "Water";
-                            break;
-                        case Tile.Liquid_Lava:
-                            search = "Lava";
-                            break;
-                        case Tile.Liquid_Honey:
-                            search = "Honey";
-                            break;
-                    }
-
-                    DoSearch(TerrariaWiki, search);
+                switch(liquid) {
+                    case LiquidID.Water:
+                        search = "Water";
+                        break;
+                    case LiquidID.Lava:
+                        search = "Lava";
+                        break;
+                    case LiquidID.Honey:
+                        search = "Honey";
+                        break;
                 }
 
-                if(item != null) {
-                    if(item.modItem != null) {
-                        Mod mod = item.modItem.mod;
-
-                        if(WikiSearch.RegisteredMods.ContainsKey(mod)) {
-                            DoSearch(WikiSearch.RegisteredMods[mod], item.Name);
-                        }
-                        else {
-                            ShowModMessage("item", item.Name, item.modItem.mod.DisplayName);
-                        }
-                    }
-                    else {
-                        DoSearch(TerrariaWiki, item.Name);
-                    }
-                }
-                else if(active || (!active && tile.wall > 0)) {
-                    Main.NewText("Cannot search for this tile. ID: " + (active ? tile.type : tile.wall) + ".");
-                }
-
-                return true;
+                DoSearch(TerrariaWiki, search);
             }
 
-            return false;
+            if(item != null) {
+                if(item.ModItem != null) {
+                    Mod mod = item.ModItem.Mod;
+
+                    if(WikiSearchSystem.RegisteredMods.ContainsKey(mod)) {
+                        DoSearch(WikiSearchSystem.RegisteredMods[mod], item.Name);
+                    }
+                    else {
+                        ShowModMessage("item", item.Name, item.ModItem.Mod.DisplayName);
+                    }
+                }
+                else {
+                    DoSearch(TerrariaWiki, item.Name);
+                }
+            }
+            else if(active || (!active && tile.WallType > 0)) {
+                Main.NewText("Cannot search for this tile. ID: " + (active ? tile.TileType : tile.WallType) + ".");
+            }
+
+            return true;
         }
 
         private static void ShowModMessage(string type, string name, string mod) {
@@ -184,7 +184,7 @@ namespace WikiSearch {
 
         private static void DoSearch(string url, string term) {
             // check if steam overlay option is true, steam is running, and if the game is using the steam overlay
-            if(WikiSearch.UseSteamOverlay && SteamAPI.IsSteamRunning() && SteamUtils.IsOverlayEnabled()) {
+            if(WikiSearchSystem.UseSteamOverlay && SteamAPI.IsSteamRunning() && SteamUtils.IsOverlayEnabled()) {
                 SteamFriends.ActivateGameOverlayToWebPage(url.Replace("%s", term));
             }
             else {
