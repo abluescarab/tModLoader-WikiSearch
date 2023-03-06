@@ -1,37 +1,39 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Terraria;
 using Terraria.ModLoader;
 
 namespace WikiSearch {
     internal class WikiSearchSystem : ModSystem {
+        internal class ModInfo {
+            public string Link;
+            public HashSet<Item> TileItems;
+
+            public ModInfo(string link) {
+                Link = link;
+                TileItems = new HashSet<Item>();
+            }
+        }
+
         private const string WikiSearchName = "Search Wiki";
-        private const string WikiSearchKey = "Q";
 
-        private static ModKeybind _wikiSearchKey;
+        public static ModKeybind WikiSearchKey;
+        public static HashSet<Item> DefaultTileItems = new HashSet<Item>();
+        public static HashSet<Item> DefaultWallItems = new HashSet<Item>();
+        public static Dictionary<Mod, ModInfo> RegisteredMods;
 
-        public static Dictionary<Mod, string> RegisteredMods;
         public static bool UseSteamOverlay = true;
 
         public override void Load() {
-            RegisteredMods = new Dictionary<Mod, string>();
-            _wikiSearchKey = KeybindLoader.RegisterKeybind(Mod, WikiSearchName, WikiSearchKey);
+            RegisteredMods = new Dictionary<Mod, ModInfo>();
+            WikiSearchKey = KeybindLoader.RegisterKeybind(Mod, WikiSearchName, Keys.Q);
         }
 
         public override void Unload() {
-            _wikiSearchKey = null;
+            WikiSearchKey = null;
             RegisteredMods = null;
-        }
-
-        public override void PostUpdateInput() {
-            try {
-                if(_wikiSearchKey != null && _wikiSearchKey.JustPressed) {
-                    SearchUtils.SearchWiki();
-                }
-            }
-            catch(KeyNotFoundException) {
-                // ignore
-            }
         }
 
         public override void PostSetupContent() {
@@ -63,7 +65,7 @@ namespace WikiSearch {
 
         public static void RegisterMod(Mod mod, string searchUrl) {
             if(mod != null && !string.IsNullOrWhiteSpace(searchUrl)) {
-                RegisteredMods.Add(mod, searchUrl);
+                RegisteredMods.Add(mod, new ModInfo(searchUrl));
                 WikiSearch.Log("[{0}] Successfully registered {1} with WikiSearch.", DateTime.Now, mod.DisplayName);
             }
         }
@@ -74,10 +76,6 @@ namespace WikiSearch {
 
                 if(mod != null) {
                     RegisteredMods.Remove(mod);
-
-                    SearchUtils.ModTileItems.Remove(mod.Name);
-                    SearchUtils.ModWallItems.Remove(mod.Name);
-
                     WikiSearch.Log("[{0}] Successfully unregistered {1} with WikiSearch.", DateTime.Now, mod.DisplayName);
                 }
             }

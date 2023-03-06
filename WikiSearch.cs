@@ -2,7 +2,6 @@
 
 namespace WikiSearch {
     public class WikiSearch : Mod {
-
         WikiSearch() {
             ContentAutoloadingEnabled = true;
         }
