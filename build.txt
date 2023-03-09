@@ -1,6 +1,6 @@
 ﻿displayName=WikiSearch
 author=abluescarab, DrEinsteinium, DarkLight666
-version=2.6.0
+version=2.7.0
 dllReferences=
 modReferences=
 noCompile=false

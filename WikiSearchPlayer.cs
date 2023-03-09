@@ -79,8 +79,26 @@ namespace WikiSearch {
             ModTile modTile = TileLoader.GetTile(tile.TileType);
             ModWall modWall = WallLoader.GetWall(tile.WallType);
 
-            // exception: liquid
-            if(tile.LiquidAmount > 0) {
+            #region Naturally Generated
+            if(tile.TileType == TileID.Pots) {
+                term = "Pots";
+            }
+            else if(tile.TileType == TileID.DemonAltar) {
+                term = WorldGen.crimson ? "Crimson Altar" : "Demon Altar";
+            }
+            else if(tile.TileType == TileID.ShadowOrbs) {
+                term = WorldGen.crimson ? "Crimson Heart" : "Shadow Orb";
+            }
+            else if(tile.TileType == TileID.FallenLog) {
+                term = "Fallen Log";
+            }
+            else if(tile.TileType == TileID.Larva) {
+                term = "Larva";
+            }
+            else if(tile.TileType == TileID.PlanteraBulb) {
+                term = "Plantera's Bulb";
+            }
+            else if(tile.LiquidAmount > 0) {
                 switch(tile.LiquidType) {
                     case LiquidID.Water:
                         term = "Water";
@@ -93,10 +111,7 @@ namespace WikiSearch {
                         break;
                 }
             }
-            // exception: pots
-            else if(tile.TileType == TileID.Pots) {
-                term = "Pots";
-            }
+            #endregion
             // check if modded tile
             else if(modTile != null) {
                 mod = modTile.Mod;
