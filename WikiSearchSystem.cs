@@ -38,27 +38,27 @@ namespace WikiSearch {
 
         public override void PostSetupContent() {
             if(ModLoader.TryGetMod("ThoriumMod", out Mod thorium))
-                RegisterMod(thorium, "http://thoriummod.gamepedia.com/index.php?search=%s");
+                RegisterMod(thorium, "http://thoriummod.fandom.com/index.php?search=%s");
             else
                 UnregisterMod("ThoriumMod");
 
             if(ModLoader.TryGetMod("CalamityMod", out Mod calamity))
-                RegisterMod(calamity, "http://calamitymod.gamepedia.com/index.php?search=%s");
+                RegisterMod(calamity, "http://calamitymod.fandom.com/index.php?search=%s");
             else
                 UnregisterMod("CalamityMod");
 
             if(ModLoader.TryGetMod("SpiritMod", out Mod spirit))
-                RegisterMod(spirit, "http://spiritmod.gamepedia.com/index.php?search=%s");
+                RegisterMod(spirit, "http://spiritmod.fandom.com/index.php?search=%s");
             else
                 UnregisterMod("SpiritMod");
 
             if(ModLoader.TryGetMod("Fargowiltas", out Mod fargo))
-                RegisterMod(fargo, "http://fargosmod.gamepedia.com/index.php?search=%s");
+                RegisterMod(fargo, "https://terrariamods.wiki.gg/index.php?search=Fargo%27s+Mod/%s");
             else
                 UnregisterMod("Fargowiltas");
 
             if(ModLoader.TryGetMod("Tremor", out Mod tremor))
-                RegisterMod(tremor, "http://tremormod.gamepedia.com/index.php?search=%s");
+                RegisterMod(tremor, "http://tremormod.fandom.com/index.php?search=%s");
             else
                 UnregisterMod("Tremor");
         }
