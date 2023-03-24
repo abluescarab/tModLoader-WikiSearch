@@ -61,6 +61,16 @@ namespace WikiSearch {
                 RegisterMod(tremor, "http://tremormod.fandom.com/index.php?search=%s");
             else
                 UnregisterMod("Tremor");
+
+            if(ModLoader.TryGetMod("MagicStorage", out Mod magicStorage))
+                RegisterMod(magicStorage, "https://terrariamods.fandom.com/index.php?search=Magic+Storage/%s");
+            else
+                UnregisterMod("MagicStorage");
+
+            if(ModLoader.TryGetMod("StarsAbove", out Mod starsAbove))
+                RegisterMod(starsAbove, "https://terrariamods.wiki.gg/index.php?search=The+Stars+Above/%s");
+            else
+                UnregisterMod("StarsAbove");
         }
 
         public static void RegisterMod(Mod mod, string searchUrl) {
