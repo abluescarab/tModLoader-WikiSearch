@@ -8,9 +8,7 @@ To register your mod, you must use the `Call()` method. Place the following code
 
 ```csharp
 public override void PostSetupContent() {
-    Mod wikiSearch = ModLoader.GetMod("WikiSearch");
-
-    if(wikiSearch != null) {
+    if(ModLoader.TryGetMod("WikiSearch", out Mod wikiSearch) {
         wikiSearch.Call("RegisterMod", this, "http://mymod.gamepedia.com/index.php?search=%s");
     }
 }
